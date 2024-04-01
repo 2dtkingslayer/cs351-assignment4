@@ -4,7 +4,7 @@
 # Member 1: Truong Dang - tdd4 - 31558941
 # Member 2: Arnoldo Rivera - UCID - NJIT ID
 # Member 3: Nifesimi Akintola - UCID - NJIT ID
-# Member 4: Bruno Quinones - UCID - NJIT ID
+# Member 4: Bruno Quinones - bq3 - 31551111
 
 def printOutput(str):
     print("Output (Plain Text): " + str + "\n")

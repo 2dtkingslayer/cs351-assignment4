@@ -6,4 +6,4 @@
   Member 3: Nifesimi Akintola - UCID - NJIT ID<br />
   Member 4: Bruno Quinones - bq3 - 31551111<br />
 
-## Requirement: [Assignment 4.pdf](Assignemnt\4.pdf)
+## Requirement: [Assignment 4.pdf](Assignment%204.pdf)

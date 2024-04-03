@@ -1,0 +1,10 @@
+Cipher text (input): Zrk tun ufzt?
+Plain text (output): Are you okay?
+Keys:
+    Z --> A
+    U --> O
+    R --> R
+    K --> E
+    T --> Y
+    N --> U
+    F --> K

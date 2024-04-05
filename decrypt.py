@@ -3,7 +3,7 @@
 # Assignment 4
 # Member 1: Truong Dang - tdd4 - 31558941
 # Member 2: Arnoldo Rivera - ar72 - 31511245
-# Member 3: Nifesimi Akintola - UCID - NJIT ID
+# Member 3: Nifesimi Akintola - na553 - 31550903
 # Member 4: Bruno Quinones - bq3 - 31551111
 
 # For Decoration

@@ -2,7 +2,7 @@
 # Group 11
 # Assignment 4
 # Member 1: Truong Dang - tdd4 - 31558941
-# Member 2: Arnoldo Rivera - UCID - NJIT ID
+# Member 2: Arnoldo Rivera - ar72 - 31511245
 # Member 3: Nifesimi Akintola - UCID - NJIT ID
 # Member 4: Bruno Quinones - bq3 - 31551111
 
@@ -10,11 +10,14 @@
 def barLine():
     print("-" * 30)
 
+# Print Input String (Cipher Text)
+def printInput(input_string):
+    print("Input (Cipher Text): " + input_string)
+
 # Print Output String (Plain Text)
 def printOutput(output_string):
     print("Output (Plain Text): " + output_string)
-    barLine()
-
+    
 # Convert CT to PT using keys
 def convertToPlainText(cipher: str, keys: dict):
     output_string = ''
@@ -25,15 +28,23 @@ def convertToPlainText(cipher: str, keys: dict):
             output_string += c
     return output_string
 
-# Print keys
-def printKeys(keys: dict):
+def printKeys(combinedCP: dict):
+    tempcombinedCP = combinedCP.copy()
+    # Check Duplicates
+    value_count = {}
+    for value in tempcombinedCP.values():
+        if value in value_count:
+            value_count[value] += 1
+        else:
+            value_count[value] = 1
+    duplicates = {value: count for value, count in value_count.items() if count > 1}
+    for dup in duplicates.keys():
+        for t in tempcombinedCP.keys():
+            if tempcombinedCP[t] == dup:
+                tempcombinedCP[t] += " DUPLICATE!"
     print("CURRENT KEYS:")
-    for cipher_letter in keys.keys():
-        print(cipher_letter + " ---> " + keys[cipher_letter])
-def printTempKeys(keys: dict):
-    print("TEMPORARY KEYS:")
-    for cipher_letter in keys.keys():
-        print(cipher_letter + " ---> " + keys[cipher_letter])
+    for cipherTextLetter in tempcombinedCP.keys():
+        print(cipherTextLetter + " ---> " + tempcombinedCP[cipherTextLetter])
 
 # Get manual input from user and save to new dictionary
 def inputManually() -> dict:
@@ -48,18 +59,17 @@ def inputManually() -> dict:
     return new_pairs
 
 # Merge new keys with current keys
-def updateKeys(keys: dict, new_pairs: dict):
-    temp_keys = keys.copy()
+def updateKeys(combinedCP: dict, new_pairs: dict):
+    tempcombinedCP = combinedCP.copy()
     for cipher_letter in new_pairs.keys():
-        temp_keys[cipher_letter] = new_pairs[cipher_letter]
-    # Check Duplicates
-    if len(set(temp_keys.values())) != len(temp_keys):
-        printTempKeys(temp_keys)
-        print("There is duplicate in either cipher keys or plain keys. This is invalid! Old key is kept.")
-        printKeys(keys)
-        return keys
-    else:
-        return temp_keys
+        tempcombinedCP[cipher_letter] = new_pairs[cipher_letter]
+    return tempcombinedCP
+
+def printFrequency(keys_dict: dict, freq_dict: dict):
+    print("Cipher Letter\tFrequency\tPlain Letter")
+    for key in keys_dict.keys():
+        print(f"{key}\t\t{freq_dict[key]}\t\t{keys_dict[key]}")
+    barLine()
 
 # Initiaizing Frequency Table
 frequency = {
@@ -78,42 +88,49 @@ cipher = cipher.upper() # Make sure all letters are uppercase
 barLine()
 
 # Analyze Frequency
-letters_freq = {}
+cipherTextFreq = {}
 for char in cipher:
-    if char in punc or char == ' ':
+    if char in punc or char == ' ' or not char.isalpha():
         continue
-    if char in letters_freq:
-        letters_freq[char] += 1
+    if char in cipherTextFreq:
+        cipherTextFreq[char] += 1
     else:
-        letters_freq[char] = 1
+        cipherTextFreq[char] = 1
 # Sort Frequency (high to low)
-letters_freq = sorted(letters_freq, key=lambda x: letters_freq[x], reverse=True)
-
+cipherTextFreqSort = sorted(cipherTextFreq, key=lambda x: cipherTextFreq[x], reverse=True)
 # Connect Cipher Text's Letters Frequency to Frequency Table
-keys = {}
-for letter in letters_freq:
-    keys[letter] = frequency.pop()
-printKeys(keys)
+combinedCtoP = {}
+for cipherTextLetter in cipherTextFreqSort:
+    combinedCtoP[cipherTextLetter] = frequency.pop()
+printFrequency(combinedCtoP, cipherTextFreq)
 
-# Output (Plain Text)
-output_string = convertToPlainText(cipher, keys)
+output_string = convertToPlainText(cipher, combinedCtoP)
+
+printKeys(combinedCtoP)
+printInput(cipher)
 printOutput(output_string)
 
 # Manual Replacement
 ans = input("Would you like to manually replace some characters? (Y/N): ").upper()
 while ans not in ['Y', 'N']:
     ans = input("Enter a valid option (Y/N) or (E) to exit: ").upper()
-    if ans in ['E', 'N']:
+    if ans in ['E', 'e']:
         exit(0)
 if ans == 'N': # No Editing
     exit(0)
 
-while ans in ['Y','y']: # Manually Editing
+while ans in ['Y', 'y']:
+    barLine()
     print("Type cipher and plain letter respectively separated by a space. Type 'DONE' to complete.")
     new_pairs = inputManually()
-    keys = updateKeys(keys, new_pairs)
+    combinedCtoP = updateKeys(combinedCtoP, new_pairs)
+    printKeys(combinedCtoP)
+    print("CT: " + cipher)
+    output_string = convertToPlainText(cipher, combinedCtoP)
+    print("PT: " + output_string)
+    ans = input("Would you like to manually replace some characters? (Y/N): ").upper()
+    while ans not in ['Y', 'N']:
+        ans = input("Enter a valid option (Y/N): ").upper()
 
-    output_string = convertToPlainText(cipher, keys)
-    printOutput(output_string)
-
-    ans = input("Would you like to manually replace some characters? (Y/N): ")
+barLine()
+print("Final Result of Plain Text: " + output_string)

@@ -10,15 +10,35 @@
 def barLine():
     print("-" * 30)
 
-# Print Input String (Cipher Text)
+'''
+==============================================
+printInput(input_string: str)
+----------------------------------------------
+This function prints the input string (Cipher Text)
+==============================================
+'''
 def printInput(input_string):
     print("Input (Cipher Text): " + input_string)
 
-# Print Output String (Plain Text)
+'''
+==============================================
+printOutput(output_string: str)
+----------------------------------------------
+This function prints the output string (Plain Text)
+==============================================
+'''
 def printOutput(output_string):
     print("Output (Plain Text): " + output_string)
     
-# Convert CT to PT using keys
+
+'''
+==============================================
+convertToPlainText(cipher: str, keys: dict) -> str
+----------------------------------------------
+This function converts the cipher text to plain text 
+using the keys computed from frequency analysis
+==============================================
+'''
 def convertToPlainText(cipher: str, keys: dict):
     output_string = ''
     for c in cipher:
@@ -28,6 +48,16 @@ def convertToPlainText(cipher: str, keys: dict):
             output_string += c
     return output_string
 
+
+'''
+==============================================
+printKeys(combinedCP: dict)
+----------------------------------------------
+This function prints the current mapping of
+the cipher text to plain text characters
+and indicates if there are any duplicates.
+==============================================
+'''
 def printKeys(combinedCP: dict):
     tempcombinedCP = combinedCP.copy()
     # Check Duplicates
@@ -46,7 +76,17 @@ def printKeys(combinedCP: dict):
     for cipherTextLetter in tempcombinedCP.keys():
         print(cipherTextLetter + " ---> " + tempcombinedCP[cipherTextLetter])
 
-# Get manual input from user and save to new dictionary
+'''
+==============================================
+inputManually() -> dict
+----------------------------------------------
+This function takes in manual input from the user
+to replace any character of their choice in the cipher 
+text with a new plain text character.
+Users are to enter the cipher letter followed by a space
+and then the plain letter.
+==============================================
+'''
 def inputManually() -> dict:
     new_pairs = {}
     pair = input("Enter Cipher Letter and Plain Letter: ").upper()
@@ -58,36 +98,60 @@ def inputManually() -> dict:
         pair = input("Enter Cipher Letter and Plain Letter: ").upper()
     return new_pairs
 
-# Merge new keys with current keys
+'''
+==============================================
+updateKeys(combinedCP: dict, new_pairs: dict) -> dict
+----------------------------------------------
+This function updates the existing cipher to plain text
+mapping with the new pairs provided by the user.
+==============================================
+'''
 def updateKeys(combinedCP: dict, new_pairs: dict):
     tempcombinedCP = combinedCP.copy()
     for cipher_letter in new_pairs.keys():
         tempcombinedCP[cipher_letter] = new_pairs[cipher_letter]
     return tempcombinedCP
 
+'''
+==============================================
+printFrequency(keys_dict: dict, freq_dict: dict)
+----------------------------------------------
+This function prints the frequency of each letter
+==============================================
+'''
 def printFrequency(keys_dict: dict, freq_dict: dict):
     print("Cipher Letter\tFrequency\tPlain Letter")
     for key in keys_dict.keys():
         print(f"{key}\t\t{freq_dict[key]}\t\t{keys_dict[key]}")
     barLine()
 
-# Initiaizing Frequency Table
+# Initiaizing Frequency Table used for Frequency Analysis
 frequency = {
     "A": 8.2,  "B": 1.5, "C": 2.8, "D": 4.3, "E": 12.7,  "F": 2.2, "G": 2.0, "H": 6.1, 
     "I": 7.0, "J": 0.2, "K": 0.8, "L": 4.0, "M": 2.4, "N": 6.7, "O": 7.5, "P": 1.9,
     "Q": 0.1, "R": 6.0, "S": 6.3, "T": 9.1, "U": 2.8, "V": 0.98, "W": 2.4, "X": 0.15, "Y": 1.97, "Z": 0.07
 }
-frequency = sorted(frequency, key=lambda x: frequency[x]) # Sort (low to high)
 
-# Initializing Punctuation
-punc = '''!()-[]{};:'",<>./?@#$%^&*_~'''
+# List of characters sorted low to high by frequency
+frequency = sorted(frequency, key=lambda x: frequency[x]) 
+
+'''
+Initializing punctuation. Assuming that cipher text
+will contain only letters of the english alphabet, 
+spaces, and punctuations like !()-[]{};:'",<>.\/?@#$%^&*_~
+'''
+punc = '''!()-[]{};:'",<>.\/?@#$%^&*_~'''
 
 # Input (Cipher Text)
 cipher = input("Enter Cipher Text: ")
 cipher = cipher.upper() # Make sure all letters are uppercase
 barLine()
 
-# Analyze Frequency
+'''
+Computing the frequency of each character 
+in the cipher text,for use in mapping stage 
+of the frequency analysis
+'''
 cipherTextFreq = {}
 for char in cipher:
     if char in punc or char == ' ' or not char.isalpha():
@@ -96,9 +160,18 @@ for char in cipher:
         cipherTextFreq[char] += 1
     else:
         cipherTextFreq[char] = 1
+
+
 # Sort Frequency (high to low)
 cipherTextFreqSort = sorted(cipherTextFreq, key=lambda x: cipherTextFreq[x], reverse=True)
-# Connect Cipher Text's Letters Frequency to Frequency Table
+
+
+
+'''
+Mapping cipher characters to plain text characters.
+By matching high frequency cipher text characters to
+known high frequency characters in the english language
+'''
 combinedCtoP = {}
 for cipherTextLetter in cipherTextFreqSort:
     combinedCtoP[cipherTextLetter] = frequency.pop()
@@ -110,7 +183,11 @@ printKeys(combinedCtoP)
 printInput(cipher)
 printOutput(output_string)
 
-# Manual Replacement
+'''
+Asking user if they would like to manually replace 
+some characters in the cipher text with a new plain text
+character to update the computed mapping.
+'''
 ans = input("Would you like to manually replace some characters? (Y/N): ").upper()
 while ans not in ['Y', 'N']:
     ans = input("Enter a valid option (Y/N) or (E) to exit: ").upper()

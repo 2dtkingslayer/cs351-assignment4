@@ -29,7 +29,6 @@ This function prints the output string (Plain Text)
 '''
 def printOutput(output_string):
     print("Output (Plain Text): " + output_string)
-    
 
 '''
 ==============================================
@@ -47,7 +46,6 @@ def convertToPlainText(cipher: str, keys: dict):
         else:
             output_string += c
     return output_string
-
 
 '''
 ==============================================
@@ -161,11 +159,8 @@ for char in cipher:
     else:
         cipherTextFreq[char] = 1
 
-
 # Sort Frequency (high to low)
 cipherTextFreqSort = sorted(cipherTextFreq, key=lambda x: cipherTextFreq[x], reverse=True)
-
-
 
 '''
 Mapping cipher characters to plain text characters.
